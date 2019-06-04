@@ -1,0 +1,84 @@
+﻿@model VehicleViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/home/">Login</a></li>
+        <li class="breadcrumb-item"><a href="/home/vehicles/">Vehicles</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@Model.Vehicle.DisplayName | @Model.Vehicle.Vin</li>
+    </ol>
+</nav>
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <div class="card-header">
+                @Model.Vehicle.DisplayName | @Model.Vehicle.State
+            </div>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Charging Details</h5>
+            <p class="card-text">
+                @if (Model.Vehicle.ChargeState != null)
+                {
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">State of Charge</th>
+                                <th scope="col">Charge Limit</th>
+                                <th scope="col">Est. Range</th>
+                                <th scope="col">Charger State</th>
+                                <th scope="col">Current</th>
+                                <th scope="col">Voltage</th>
+                                <th scope="col">Power</th>
+                                <th scope="col">Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">@Model.Vehicle.ChargeState.BatteryLevel%</th>
+                                <td>@Model.Vehicle.ChargeState.ChargeLimitSoc%</td>
+                                <td>@Model.Vehicle.ChargeState.EstBatteryRange mi</td>
+                                <td>@Model.Vehicle.ChargeState.ChargingState</td>
+                                <td>@Model.Vehicle.ChargeState.ChargerActualCurrent</td>
+                                <td>@(Model.Vehicle.ChargeState.ChargerVoltage)v</td>
+                                <td>@(Model.Vehicle.ChargeState.ChargerPower)kW</td>
+                                <td>@Model.Vehicle.ChargeState.ChargeRate mi/hr</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                }
+            </p>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-2">
+        <form method="post" action="/home/WakeUp">
+            <input type="hidden" name="id" value="@Model.Vehicle.Id" />
+            <button class="btn btn-primary" type="submit">Wake Up</button>
+        </form>
+    </div>
+    <div class="col-lg-6">
+        <form method="post" action="/home/SetChargeLimit" class="form-inline">
+            <div class="form-group">
+                <input type="hidden" name="id" value="@Model.Vehicle.Id" />
+                <input class="form-control" placeholder="80" aria-label="Set the state of charge limit" aria-describedby="setLimitAddon" name="percent" type="text" value="@Model.Vehicle.ChargeState?.ChargeLimitSoc" />
+            </div>
+            <button class="btn btn-primary" type="submit">Set Limit</button>
+        </form>
+    </div>
+
+    <div class="col-sm-2">
+        <form method="post" action="/home/StartCharging">
+            <input type="hidden" name="id" value="@Model.Vehicle.Id" />
+            <button class="btn btn-danger" type="submit">Start Charging</button>
+        </form>
+    </div>
+    <div class="col-sm-2">
+        <form method="post" action="/home/StopCharging">
+            <input type="hidden" name="id" value="@Model.Vehicle.Id" />
+            <button class="btn btn-warning" type="submit">Stop Charging</button>
+        </form>
+    </div>
+</div>

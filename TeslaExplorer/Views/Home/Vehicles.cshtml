@@ -1,0 +1,20 @@
+﻿@model VehiclesViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="row">
+    @foreach (var vehicle in Model.Vehicles)
+    {
+    <div class="row">
+        <div class="col">@vehicle.DisplayName</div>
+        <div class="col">@vehicle.Vin</div>
+        <div class="col">@vehicle.State</div>
+        <form method="post" action="/home/WakeUp">
+            <input type="hidden" name="id" value="@vehicle.Id" />
+            <button class="btn btn-primary" type="submit">Wake Up</button>
+        </form>
+        <div class="col"><a class="btn btn-primary" href="/home/vehicle/@vehicle.Id/">Details</a></div>
+    </div>
+    }    
+</div>
