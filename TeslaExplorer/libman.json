@@ -17,6 +17,10 @@
     {
       "library": "vue@2.6.10",
       "destination": "wwwroot/lib/vue/"
+    },
+    {
+      "library": "react@16.8.6",
+      "destination": "wwwroot/lib/react/"
     }
     ]
 }
