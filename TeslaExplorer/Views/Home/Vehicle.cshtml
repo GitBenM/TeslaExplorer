@@ -27,6 +27,7 @@
                                 <th scope="col">State of Charge</th>
                                 <th scope="col">Charge Limit</th>
                                 <th scope="col">Est. Range</th>
+                                <th scope="col">Est. Max Range</th>
                                 <th scope="col">Charger State</th>
                                 <th scope="col">Current</th>
                                 <th scope="col">Voltage</th>
@@ -39,6 +40,7 @@
                                 <th scope="row">@Model.Vehicle.ChargeState.BatteryLevel%</th>
                                 <td>@Model.Vehicle.ChargeState.ChargeLimitSoc%</td>
                                 <td>@Model.Vehicle.ChargeState.EstBatteryRange mi</td>
+                                <td>@(((Model.Vehicle.ChargeState.EstBatteryRange / Model.Vehicle.ChargeState.BatteryLevel) * 100).ToString("F2")) mi</td>
                                 <td>@Model.Vehicle.ChargeState.ChargingState</td>
                                 <td>@Model.Vehicle.ChargeState.ChargerActualCurrent</td>
                                 <td>@(Model.Vehicle.ChargeState.ChargerVoltage)v</td>
