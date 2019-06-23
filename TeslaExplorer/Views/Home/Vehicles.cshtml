@@ -14,7 +14,10 @@
             <input type="hidden" name="id" value="@vehicle.Id" />
             <button class="btn btn-primary" type="submit">Wake Up</button>
         </form>
-        <div class="col"><a class="btn btn-primary" href="/home/vehicle/@vehicle.Id/">Details</a></div>
+        @if (vehicle.State == "online")
+        {
+            <div class="col"><a class="btn btn-primary" href="/home/vehicle/@vehicle.Id/">Details</a></div>
+        }
     </div>
     }    
 </div>
