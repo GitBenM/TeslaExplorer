@@ -1,16 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
-using TeslaExplorer.Api;
-using TeslaExplorer.DataAccess;
 using TeslaExplorer.Models;
 
 namespace TeslaExplorer.Controllers
 {
     public class HomeController : Controller
     {
-        public static TeslaClient TeslaApi = new TeslaClient();
 
         public IActionResult Index()
         {
@@ -20,37 +21,54 @@ namespace TeslaExplorer.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(LoginViewModel model)
         {
-            var authRequestDto = new AuthRequestDto
-            {
-                ClientId = TeslaClient.TESLA_CLIENT_ID,
-                ClientSecret = TeslaClient.TESLA_CLIENT_SECRET,
-                Email = model.EmailAddress,
-                GrantType = "password",
-                Password = model.Password
-            };
+            if (model == null || string.IsNullOrEmpty(model.EmailAddress) || string.IsNullOrEmpty(model.Password))
+                return View(model);
 
-            var authResponse = await TeslaApi.AuthRequest(authRequestDto);
+            var api = UserApiFactory.GetApi(model.EmailAddress);
 
-            if (authResponse.IsSuccess)
+            //Todo add feedback
+            if(api == null)
+                return View(model);
+
+            if (await new AuthRequestFactory().GetAuthToken(api, model.EmailAddress, model.Password))
             {
-                TeslaApi.Client.SetAuthorizationHeader(authResponse.Result.AccessToken);
+                var identity = new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, model.EmailAddress) }, CookieAuthenticationDefaults.AuthenticationScheme);
+                var principal = new ClaimsPrincipal(identity);
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+                HttpContext.Session.SetString("username", model.EmailAddress);
+
                 return RedirectToAction("Vehicles");
             }
 
             return View(model);
         }
 
+        
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync();
+
+            return RedirectToAction("Index");            
+        }
+
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> WakeUp(string id)
         {
-            var wakeUpResponse = await TeslaApi.PostWakeUp(id);
+            var api = UserApiFactory.GetApi(HttpContext.Session.GetString("username"));
+
+            var wakeUpResponse = await api.PostWakeUp(id);
 
             return RedirectToAction("Vehicle", new { id });
         }
 
+        [Authorize]
         public async Task<IActionResult> Vehicle(string id)
         {
-            var vehicleData = await TeslaApi.GetVehicleData(id);
+            var api = UserApiFactory.GetApi(HttpContext.Session.GetString("username"));
+
+            var vehicleData = await api.GetVehicleData(id);
 
             if (vehicleData.IsSuccess)
             {
@@ -63,36 +81,46 @@ namespace TeslaExplorer.Controllers
             return RedirectToAction("Vehicles");
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> SetChargeLimit(string id, int percent)
         {
-            var chargeResponse = await TeslaApi.PostChargeLimit(id, percent);
+            var api = UserApiFactory.GetApi(HttpContext.Session.GetString("username"));
+
+            var chargeResponse = await api.PostChargeLimit(id, percent);
 
             return RedirectToAction("Vehicle", new { id });
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> StartCharging(string id)
         {
-            var chargeResponse = await TeslaApi.PostChargeStart(id);
+            var api = UserApiFactory.GetApi(HttpContext.Session.GetString("username"));
+
+            var chargeResponse = await api.PostChargeStart(id);
 
             return RedirectToAction("Vehicle", new { id });
         }
+
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> StopCharging(string id)
         {
-            var chargeResponse = await TeslaApi.PostChargeStop(id);
+            var api = UserApiFactory.GetApi(HttpContext.Session.GetString("username"));
+
+            var chargeResponse = await api.PostChargeStop(id);
 
             return RedirectToAction("Vehicle", new { id });
         }
 
-        /// <summary>
-        /// TODO add authorization
-        /// </summary>
-        /// <returns></returns>
+
+        [Authorize]
         public async Task<IActionResult> Vehicles()
         {
-            var response = await TeslaApi.GetVehicles();
+            var api = UserApiFactory.GetApi(HttpContext.Session.GetString("username"));
+
+            var response = await api.GetVehicles();
 
             if (!response.IsSuccess)
                 return RedirectToAction("Index");

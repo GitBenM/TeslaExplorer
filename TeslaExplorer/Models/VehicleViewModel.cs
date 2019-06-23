@@ -1,6 +1,4 @@
-using System;
-using System.Collections.Generic;
-using TeslaExplorer.DataAccess;
+using TeslaExplorer.Api;
 
 namespace TeslaExplorer.Models
 {

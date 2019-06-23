@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 
-namespace TeslaExplorer.Api
+namespace WebCommon
 {
     public class WebRequestResult<T>
     {

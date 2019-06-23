@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using TeslaExplorer.DataAccess;
-
 namespace TeslaExplorer.Models
 {
     public class ChargeViewModel

@@ -4,14 +4,13 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TeslaExplorer.Api
+namespace WebCommon
 {
     /// <summary>
     /// https://tesla-api.timdorr.com/
     /// </summary>
     public class HttpClientWrapper
     {
-        public DateTimeOffset DateLastAccess { get; set; } = DateTimeOffset.Now;
         public HttpClient Client { get; set; }
         public HttpClientWrapper(string userAgent, string baseUrl)
         {
@@ -57,8 +56,6 @@ namespace TeslaExplorer.Api
         {
             try
             {
-                DateLastAccess = DateTimeOffset.Now;
-
                 var serviceResponse = await Client.SendAsync(request);
 
                 if (serviceResponse.StatusCode != System.Net.HttpStatusCode.OK)
