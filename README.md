@@ -1,4 +1,10 @@
 # TeslaExplorer
 A fun side project to make use of the unofficial Tesla API.
-This app has some basic features, such as login/logout, viewing vehicles associated with your account, starting and stopping charging, and setting the charge limit.
-Big thanks to the tesla-api project https://github.com/timdorr/tesla-api
+
+The app has some basic features:
+* login/logout
+* view vehicles associated with your account
+* start and stop charging
+* set the charge limit
+
+Big thanks to the [tesla-api](https://github.com/timdorr/tesla-api) project for documenting the endpoints.
