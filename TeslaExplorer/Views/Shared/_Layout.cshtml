@@ -50,9 +50,16 @@
                 integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM">
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
-    </environment>
-    
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-142603971-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
 
+            gtag('config', 'UA-142603971-1');
+        </script>
+    </environment>
+   
     @RenderSection("Scripts", required: false)
 </body>
 </html>
