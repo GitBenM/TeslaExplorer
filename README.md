@@ -2,10 +2,11 @@
 [Tesla Explorer](http://teslaexplorer.azurewebsites.net/) is a fun way for me to learn new things and present information about my Tesla vehicle in a manner I find pleasing.
 
 The app has the following features:
-* login
-* view account vehicles
-* start and stop charging
-* set the charge limit
+* Login
+* View account vehicles
+* View vehicle details
+* Start and stop charging
+* Set charge limit
 
 Features I want to add:
 * Better wake up management
