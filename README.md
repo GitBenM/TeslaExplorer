@@ -1,5 +1,5 @@
-# TeslaExplorer
-[TeslaExplorer](http://teslaexplorer.azurewebsites.net/) is a fun way for me to learn new things and present information about my Tesla vehicle in a manner I find pleasing.
+# Tesla Explorer
+[Tesla Explorer](http://teslaexplorer.azurewebsites.net/) is a fun way for me to learn new things and present information about my Tesla vehicle in a manner I find pleasing.
 
 The app has the following features:
 * login
