@@ -13,10 +13,6 @@
     {
       "library": "jquery-validation-unobtrusive@3.2.11",
       "destination": "wwwroot/lib/libman-jquery-validation-unobtrusive/"
-    },
-    {
-      "library": "vue@2.6.10",
-      "destination": "wwwroot/lib/vue/"
     }
     ]
 }

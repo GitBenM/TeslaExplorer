@@ -1,4 +1,5 @@
-﻿@model VehicleViewModel
+﻿@using Newtonsoft
+@model VehicleViewModel
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -9,6 +10,16 @@
         <li class="breadcrumb-item active" aria-current="page">@Model.Vehicle.DisplayName | @Model.Vehicle.Vin</li>
     </ol>
 </nav>
+
+<div id="vehicle-app"></div>
+
+<script>
+    window.vehicleData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Vehicle));
+</script>
+
+@section scripts {
+    <script src="~/js/react/dist/vehicle.js"></script>
+}
 <div class="row">
     <div class="col">
         <div class="card">
