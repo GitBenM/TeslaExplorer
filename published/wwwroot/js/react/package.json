@@ -1,0 +1,25 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "Tesla Explorer React App",
+  "main": "app.js",
+  "scripts": {
+    "webpack": "webpack",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Benjamin Miller",
+  "license": "MIT",
+  "dependencies": {
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-bootstrap": "^1.0.0-beta.9"
+  },
+  "devDependencies": {
+    "@babel/core": "7.5.4",
+    "@babel/preset-env": "7.5.4",
+    "@babel/preset-react": "7.0.0",
+    "babel-loader": "^8.0.6",
+    "webpack": "^4.35.3",
+    "webpack-cli": "^3.3.5"
+  }
+}

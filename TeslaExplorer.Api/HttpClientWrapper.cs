@@ -37,7 +37,7 @@ namespace TeslaExplorer.Api
         {
             try
             {
-                var request = new HttpRequestMessage(method, url);
+                using var request = new HttpRequestMessage(method, url);
 
                 if (dto != null)
                     request.Content = new StringContent(JsonConvert.SerializeObject(dto), Encoding.UTF8, contentType);

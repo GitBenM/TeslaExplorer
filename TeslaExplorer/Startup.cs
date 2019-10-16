@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Hangfire;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -38,6 +39,8 @@ namespace TeslaExplorer
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddHangfire(x => x.UseSqlServerStorage("Server=127.0.0.1;Database=TeslaExplorer;User Id=sa; Password =P@ssword1234; "));
+            services.AddHangfireServer();
 
             services.AddMvc(option => option.EnableEndpointRouting = false).SetCompatibilityVersion(CompatibilityVersion.Latest);
         }
@@ -55,6 +58,7 @@ namespace TeslaExplorer
                 app.UseHsts();
             }
 
+            app.UseHangfireDashboard();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSession();

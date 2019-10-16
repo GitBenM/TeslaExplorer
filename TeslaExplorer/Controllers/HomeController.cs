@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Hangfire;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Diagnostics;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -110,6 +112,15 @@ namespace TeslaExplorer.Controllers
             var api = UserApiFactory.GetApi(HttpContext.Session.GetString("username"));
 
             var chargeResponse = await api.PostChargeStop(id);
+
+            return RedirectToAction("Vehicle", new { id });
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> ChargeToStorage(string id, int storageStateOfCharge = 60)
+        {
+            BackgroundJob.Schedule(() => CheckChargeState.CheckChargingStatus(HttpContext.Session.GetString("username"), id, storageStateOfCharge), TimeSpan.FromSeconds(10));
 
             return RedirectToAction("Vehicle", new { id });
         }
