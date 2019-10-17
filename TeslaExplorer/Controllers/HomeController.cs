@@ -118,9 +118,12 @@ namespace TeslaExplorer.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> ChargeToStorage(string id, int storageStateOfCharge = 60)
+        public IActionResult ChargeToStorage(string id, int storageStateOfCharge = 60)
         {
-            BackgroundJob.Schedule(() => CheckChargeState.CheckChargingStatus(HttpContext.Session.GetString("username"), id, storageStateOfCharge), TimeSpan.FromSeconds(10));
+            var username = HttpContext.Session.GetString("username");
+            var api = UserApiFactory.GetApi(username);
+
+            BackgroundJob.Schedule(() => CheckChargeState.CheckChargingStatus(username, id, storageStateOfCharge, api.AccessToken), TimeSpan.FromSeconds(10));
 
             return RedirectToAction("Vehicle", new { id });
         }

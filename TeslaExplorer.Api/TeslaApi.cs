@@ -20,6 +20,7 @@ namespace TeslaExplorer.Api
         /// </summary>
         public string Username { get; set; }
 
+        public string AccessToken { get; set; }
         public TeslaApi(string username)
         {
             Username = username;
@@ -28,6 +29,12 @@ namespace TeslaExplorer.Api
             {
                 DateLastAccess = DateTimeOffset.Now
             };
+        }
+
+        public void SetAccessToken(string accessToken)
+        {
+            HttpClient.SetAuthorizationHeader(accessToken);
+            AccessToken = accessToken;
         }
 
         public async Task<WebRequestResult<AuthResponseDto>> AuthRequest(AuthRequestDto dto)

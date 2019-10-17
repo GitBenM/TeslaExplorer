@@ -11,30 +11,36 @@ namespace TeslaExplorer.Models
         {
             var chargeState = await api.GetChargeState(vehicleId);
 
-            if (chargeState == null || !chargeState.IsSuccess || chargeState.Result.Response.ChargingState == "Disconnected" || chargeState.Result.Response.BatteryLevel >= maxSoc)
+            if (!(chargeState?.IsSuccess ?? false) || chargeState.Result.Response.ChargingState == "Disconnected" || chargeState.Result.Response.BatteryLevel >= maxSoc)
                 return false;
 
             if (chargeState.Result.Response.ChargingState == "Stopped")
             {
-                var chargeResult = await api.PostChargeStart(vehicleId);
+                await api.PostChargeStart(vehicleId);
             }
 
             return true;
         }
 
-        public static async Task CheckChargingStatus(string username, string vehicleId, int maxSoc)
+        public static async Task CheckChargingStatus(string username, string vehicleId, int maxSoc, string accessToken)
         {
-            var api = UserApiFactory.GetApi(username);
+            var api = new TeslaApi(username);
+
+            api.SetAccessToken(accessToken);
 
             var vehicleState = await api.GetVehicleData(vehicleId);
 
             //wake up the car
             if (vehicleState.Result.Response.State != "online")
+            {
                 await api.PostWakeUp(vehicleId);
+                BackgroundJob.Schedule(() => CheckChargingStatus(username, vehicleId, maxSoc, accessToken), TimeSpan.FromMinutes(2));
+                return;
+            }
 
             if (await KeepCharging(vehicleId, maxSoc, api))
             {
-                BackgroundJob.Schedule(() => CheckChargingStatus(username, vehicleId, maxSoc), TimeSpan.FromMinutes(5));
+                BackgroundJob.Schedule(() => CheckChargingStatus(username, vehicleId, maxSoc, accessToken), TimeSpan.FromMinutes(5));
                 return;
             }
 

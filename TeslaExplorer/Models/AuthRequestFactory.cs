@@ -21,6 +21,7 @@ namespace TeslaExplorer.Models
             if (authResponse.IsSuccess)
             {
                 api.HttpClient.SetAuthorizationHeader(authResponse.Result.AccessToken);
+                api.AccessToken = authResponse.Result.AccessToken;
                 
                 return true;
             }
