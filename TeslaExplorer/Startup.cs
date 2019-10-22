@@ -49,7 +49,7 @@ namespace TeslaExplorer
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddHangfire(x => x.UseSqlServerStorage("Server=172.18.0.3,1433;Database=TeslaExplorer;User Id=sa; Password =P@ssword1234; "));
+            services.AddHangfire(x => x.UseSqlServerStorage("Server=mssql,1433;Database=TeslaExplorer;User Id=sa; Password =P@ssword1234; "));
             services.AddHangfireServer();
 
             services.AddMvc(option => option.EnableEndpointRouting = false).SetCompatibilityVersion(CompatibilityVersion.Latest);
