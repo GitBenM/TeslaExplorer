@@ -1,4 +1,6 @@
 ﻿using Hangfire;
+using Hangfire.Annotations;
+using Hangfire.Dashboard;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +13,14 @@ using System;
 
 namespace TeslaExplorer
 {
+    public class HangfireAuthAll : IDashboardAuthorizationFilter
+    {
+        public bool Authorize([NotNull] DashboardContext context)
+        {
+            return true;
+        }
+    }
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -39,7 +49,7 @@ namespace TeslaExplorer
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddHangfire(x => x.UseSqlServerStorage("Server=127.0.0.1;Database=TeslaExplorer;User Id=sa; Password =P@ssword1234; "));
+            services.AddHangfire(x => x.UseSqlServerStorage("Server=172.18.0.3,1433;Database=TeslaExplorer;User Id=sa; Password =P@ssword1234; "));
             services.AddHangfireServer();
 
             services.AddMvc(option => option.EnableEndpointRouting = false).SetCompatibilityVersion(CompatibilityVersion.Latest);
@@ -58,12 +68,16 @@ namespace TeslaExplorer
                 app.UseHsts();
             }
 
-            app.UseHangfireDashboard();
+            app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSession();
             app.UseCookiePolicy();
-            app.UseAuthentication();
+
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            {
+                Authorization = new[] { new HangfireAuthAll() }
+            });
 
             app.UseMvc(routes =>
             {
